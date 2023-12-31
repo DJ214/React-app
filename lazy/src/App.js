@@ -9,6 +9,8 @@ import Navbar from "./Components/Navbar";
 // import Products from "./Pages/Products";
 // import Testimonials from "./Pages/Testimonials";
 import { BrowserRouter, Route,Routes } from 'react-router-dom';
+import Controlled from './Components/Controlled';
+import Uncontrolled from './Components/Uncontrolled';
 
 const Home = lazy(()=>import("./Pages/Home"));
 const About = lazy(()=>import("./Pages/About"));
@@ -54,9 +56,13 @@ function App() {
     //   </BrowserRouter>
 
     // </Suspense>
+    // <>
+    //   <HOC dark/>
+    //   <HOC yellow/>
+    // </>
     <>
-      <HOC dark/>
-      <HOC yellow/>
+      <Controlled/>
+      <Uncontrolled/>
     </>
 
   );
