@@ -2,9 +2,9 @@ import HOC from "./HOC"
 
 
 function CompA(props){
-    console.log(props);
+    console.log(props)
     return(
-        <div style={props.style}>
+        <div style = {props.style} >
             Hello
         </div>
     )

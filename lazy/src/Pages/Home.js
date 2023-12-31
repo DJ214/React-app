@@ -1,7 +1,8 @@
 
 
+
 export default function Home(){
-    return(
+    return (
         <div>I am Home Component</div>
     )
 }

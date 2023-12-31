@@ -2,7 +2,7 @@
 
 
 export default function Products(){
-    return(
-        <div>I am Products</div>
+    return (
+        <div>I am Product Component</div>
     )
 }
