@@ -1,92 +1,120 @@
-import { useState,useEffect } from 'react';
 import './App.css';
 import Navbar from './Components/Navbar';
-import Banner from './Components/Banner';
 import Movies from './Components/Movies';
-import Watchlist from './Components/Watchlist';
+import Banner from './Components/Banner';
+import WatchList from './Components/Watchlist';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import MovieDetails from './Components/MovieDetails';
 
-// We performed client side routing so that while switching through the tabs it wont get refreshed again and again which increases the user experience
-// installing react-router-dom then route our components 
 function App() {
-  let [watchList,setWatchList] = useState([]);
-  // This process is called lifting the state up which is defining the state into parent through which both parent and child can access
-  let [pageNo,setPageNo] = useState(1);
-    
-    
-  let handleNext = ()=>{
-      setPageNo(pageNo + 1)
-  }
 
-  let handlePrev = ()=>{
-      if (pageNo > 1){
-          setPageNo(pageNo - 1)
-      }
-  }
+  let [watchlist, setWatchList] = useState([]);
+  let [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 500;
 
-  useEffect(()=>{
-    let favMoviesFromLocalStorage = JSON.parse(localStorage.getItem("movies-app"))
-    if (favMoviesFromLocalStorage == null){
-        return;
+  let handleAddToWatchList = (movieObj) => {
+    console.log("hello", watchlist);
+    //let newWatchList = [...watchlist];
+    //newWatchList.push(id);
+
+    //same thing in one line
+    let newWatchList = [...watchlist, movieObj]; //watchlist === null ? [movieObj] : 
+    // copy watchlist array to newWatchList & push the latest id to newWatchList array
+    localStorage.setItem("movies-app", JSON.stringify(newWatchList));
+    console.log("newWatchList----", newWatchList);
+    setWatchList(newWatchList);
+  };
+
+  let handleRemoveFromWatchList = (movieObj) => {
+    // newWatchList contains all the elements from the original watchlist
+    // array except for the one with the id value that matches the one passed as an argument to the function
+    let newWatchList = watchlist.filter((movie) => {
+      return movie.id !== movieObj.id;
+    });
+    localStorage.setItem("movies-app", JSON.stringify(newWatchList));
+    setWatchList(newWatchList);
+  };
+
+  useEffect(() => {
+    let favouriteMoviesLocalStorage = JSON.parse(
+      localStorage.getItem("movies-app")
+    );
+    if(favouriteMoviesLocalStorage == null){
+      return;
     }
-    setWatchList(favMoviesFromLocalStorage)
+    setWatchList(favouriteMoviesLocalStorage);
+  }, []);
 
-    },[])
+  // Pagination
 
-  let handleAddToWatchList = (movieObj)=>{
-    // let newWatchList = [...watchList]
-    // newWatchList.push(id)
-    // console.log(newWatchList)
-    // setWatchList(newWatchList);
-    // same thing in one line
-    let newWatchList = [...watchList,movieObj]
-    localStorage.setItem("movies-app",JSON.stringify(newWatchList));
-    setWatchList(newWatchList)
+  
+  // For example, show 5 pages centered around the current page
+  function calculatePagesToShow() {
+    const pagesToShow = [];
+    const pagesToDisplay = 5;
 
+    // start page will be
+    let startPage = Math.max(currentPage - Math.floor(pagesToDisplay / 2), 1);
+    let endPage = startPage + pagesToDisplay - 1;
+
+    // handle edge case for last page
+    if (endPage > totalPages) {
+      endPage = totalPages;
+      startPage = Math.max(endPage - pagesToDisplay + 1, 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pagesToShow.push(i);
+    }
+
+    return pagesToShow;
   }
 
-    let handleRemoveFromWatchList = (movieObj)=>{
-        let newWatchList = watchList.filter((movie)=>{
-            return movie.id != movieObj.id;
-        })
-        localStorage.setItem("movies-app",JSON.stringify(newWatchList))
-        setWatchList(newWatchList)
-    }
+  function handlePageChange(pageNumber) {
+    setCurrentPage(pageNumber);
+  }
+
+  function handleNext() {
+    setCurrentPage(currentPage + 1);
+  }
+
+  function handlePrev() {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  }
 
   return (
-    <BrowserRouter>
-      <Navbar/>
-      
-      <Routes>
-        <Route path = '/' element = {
-          <>
-          <Banner/>
-          <Movies watchList = {watchList}
-                  setWatchList = {setWatchList}
-                  handleAddToWatchList = {handleAddToWatchList}
-                  handleRemoveFromWatchList = {handleRemoveFromWatchList}
-                  pageNo = {pageNo}
-                  handleNext = {handleNext}
-                  handlePrev = {handlePrev}
-          /></>
-        }></Route>
-        <Route path = '/Watchlist' element = {
-        <Watchlist watchList = {watchList}
-                  setWatchList ={setWatchList}
-                  handleRemoveFromWatchList = {handleRemoveFromWatchList}
-        />}></Route>
-
-      </Routes>
-
-
-    </BrowserRouter>
-    
-      
-      
-      // <Watchlist/>
-    
-    
-  );
+        <BrowserRouter>
+            <Navbar/> 
+            <Routes>
+              <Route path="/" element={
+                <>
+                  <Banner/>
+                  <Movies watchList={watchlist}
+                             setWatchList={setWatchList}
+                             handleAddToWatchList={handleAddToWatchList}
+                             handleRemoveFromWatchList={handleRemoveFromWatchList}
+                             currentPage={currentPage}
+                             totalPages={totalPages}
+                             onPageChanges={handlePageChange}
+                             calculatePagesToShow={calculatePagesToShow}
+                             handleNext={handleNext}
+                             handlePrev={handlePrev}/>           
+                </>
+              }></Route>
+              <Route path="/watchlist" element={
+                <WatchList watchList={watchlist} 
+                          setWatchList={setWatchList}
+                          handleRemoveFromWatchList={handleRemoveFromWatchList}
+                />}>                
+              </Route>
+              
+              <Route path="/movie/:id" element={<MovieDetails />} />
+              
+              {/* Note - Path is specified in Navbar anchor-->Link tag */}
+            </Routes>
+        </BrowserRouter>  
+      );
 }
 
 export default App;

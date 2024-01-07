@@ -65,7 +65,7 @@ export default function Watchlist(props){
             </div>
 
 
-            <div className="m-7 overflow-hidden rounded-lg border shadow-md        ">
+            <div className="m-7 overflow-hidden rounded-lg border shadow-md">
                 <table className=" p-4 w-full text-center">
                 <thead className="h-[3rem] bg-gray-50 border-b-2">
                     <tr>

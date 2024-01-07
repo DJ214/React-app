@@ -43,27 +43,27 @@ function App() {
     //   <Testimonials/>
 
     // </>
-    // <Suspense fallback={<h2>....Loading</h2>}>
-    //   <BrowserRouter>
-    //     <Navbar/>
-    //     <Routes>
-    //       <Route path ="/" element ={<Home/>}></Route>
-    //       <Route path = "/about" element ={<About/>}></Route>
-    //       <Route path = "/products" element ={<Products/>}></Route>
-    //       <Route path = "/testimonials" element ={<Testimonials/>}></Route>
-    //     </Routes>
+    <Suspense fallback={<h2>....Loading</h2>}>
+      <BrowserRouter>
+        <Navbar/>
+        <Routes>
+          <Route path ="/" element ={<Home/>}></Route>
+          <Route path = "/about" element ={<About/>}></Route>
+          <Route path = "/products" element ={<Products/>}></Route>
+          <Route path = "/testimonials" element ={<Testimonials/>}></Route>
+        </Routes>
 
-    //   </BrowserRouter>
+      </BrowserRouter>
 
-    // </Suspense>
+    </Suspense>
     // <>
     //   <HOC dark/>
     //   <HOC yellow/>
     // </>
-    <>
-      <Controlled/>
-      <Uncontrolled/>
-    </>
+    // <>
+    //   <Controlled/>
+    //   <Uncontrolled/>
+    // </>
 
   );
 }
